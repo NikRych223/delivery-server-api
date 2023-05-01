@@ -1,6 +1,6 @@
 ﻿namespace delivery_server_api.Models
 {
-    public class FoodItem
+    public class FoodDbModel
     {
         public Guid FoodId { get; set; }
         public string Title { get; set; }

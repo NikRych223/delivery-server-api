@@ -31,7 +31,7 @@ namespace delivery_server_api.Controllers
                 }
 
                 var image = new Image { ImageName = model.Image.FileName, LocalPath = filePath };
-                var foodItem = new FoodItem { Title = model.Title, Price = model.Price, Image = image };
+                var foodItem = new FoodDbModel { Title = model.Title, Price = model.Price, Image = image };
                 await _dbContext.FoodItems.AddAsync(foodItem);
                 await _dbContext.SaveChangesAsync();
 
@@ -43,7 +43,7 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("viewItem")]
+        [Route("getItem")]
         [HttpGet]
         public async Task<IActionResult> GetAllItems()
         {
@@ -54,8 +54,7 @@ namespace delivery_server_api.Controllers
 
                 foreach (var item in items)
                 {
-                    var image = File(await System.IO.File.ReadAllBytesAsync(item.Image.LocalPath), "image/jpeg");
-                    var itemResult = new FoodViewModel { Id = item.FoodId, Title = item.Title, Price = item.Price, Image = image };
+                    var itemResult = new FoodViewModel { Id = item.FoodId, Title = item.Title, Price = item.Price };
                     itemList.Add(itemResult);
                 }
 
@@ -67,16 +66,31 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("viewItem/{id}")]
+        [Route("getItem/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetItemById(Guid id)
         {
             try
             {
+                var item = await _dbContext.FoodItems.FindAsync(id);
+                var itemResult = new FoodViewModel { Id = item.FoodId, Title = item.Title, Price = item.Price };
+                return Ok(itemResult);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("getImage/{id}")]
+        [HttpGet]
+        public async Task<IActionResult> GetImageById(Guid id)
+        {
+            try
+            {
                 var item = await _dbContext.FoodItems.Include(x => x.Image).SingleOrDefaultAsync(x => x.FoodId == id);
                 var image = File(await System.IO.File.ReadAllBytesAsync(item.Image.LocalPath), "image/jpeg");
-                var itemResult = new FoodViewModel { Id = item.FoodId, Title = item.Title, Price = item.Price, Image = image };
-                return Ok(itemResult);
+                return image;
             }
             catch (Exception ex)
             {

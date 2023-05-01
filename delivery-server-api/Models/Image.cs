@@ -7,6 +7,6 @@
         public string LocalPath { get; set; }
 
         public Guid FoodItemId { get; set; }
-        public FoodItem FoodItem { get; set; }
+        public FoodDbModel FoodItem { get; set; }
     }
 }
