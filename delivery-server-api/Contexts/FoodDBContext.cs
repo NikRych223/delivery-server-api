@@ -55,6 +55,9 @@ namespace delivery_server_api.Contexts
                 .Property (x => x.PhoneNumber)
                 .IsRequired();
             modelBuilder.Entity<FoodUserDbModel>()
+                .Property(x => x.Addres)
+                .IsRequired();
+            modelBuilder.Entity<FoodUserDbModel>()
                 .HasMany(x => x.Favorite)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);

@@ -12,7 +12,7 @@ using delivery_server_api.Contexts;
 namespace delivery_server_api.Migrations
 {
     [DbContext(typeof(FoodDBContext))]
-    [Migration("20230502101647_InitialCreate")]
+    [Migration("20230502103018_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -307,6 +307,11 @@ namespace delivery_server_api.Migrations
             modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.FoodUserDbModel", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("Addres")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasDiscriminator().HasValue("FoodUserDbModel");
                 });

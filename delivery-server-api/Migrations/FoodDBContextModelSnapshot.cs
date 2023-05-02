@@ -305,6 +305,11 @@ namespace delivery_server_api.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Addres")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasDiscriminator().HasValue("FoodUserDbModel");
                 });
 
