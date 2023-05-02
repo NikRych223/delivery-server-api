@@ -19,5 +19,9 @@ namespace delivery_server_api.Models.ApplicationUser
         [Required]
         [Phone]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Addres { get; set; }
     }
 }

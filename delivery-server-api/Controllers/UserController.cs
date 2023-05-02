@@ -11,16 +11,39 @@ namespace delivery_server_api.Controllers
     {
         private readonly FoodDBContext _dbContext;
         private readonly UserManager<FoodUserDbModel> _userManager;
+        private readonly SignInManager<FoodUserDbModel> _signInManager;
 
-        public UserController(FoodDBContext dbContext, UserManager<FoodUserDbModel> userManager)
+        public UserController(FoodDBContext dbContext, UserManager<FoodUserDbModel> userManager, SignInManager<FoodUserDbModel> signInManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        public async Task<IActionResult> PostCreateUser()
+        [Route("createUser")]
+        [HttpPost]
+        public async Task<IActionResult> PostCreateUser([FromForm] FoodUserFormModel model)
         {
-            return null;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var user = new FoodUserDbModel { UserName = model.UserName, Email = model.EmailAddress, PhoneNumber = model.PhoneNumber, Addres = model.Addres };
+                    var result = await _userManager.CreateAsync(user, model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return Ok("User created");
+                    }
+                }
+
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
