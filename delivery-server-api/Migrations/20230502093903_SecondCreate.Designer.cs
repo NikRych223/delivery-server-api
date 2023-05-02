@@ -12,8 +12,8 @@ using delivery_server_api.Contexts;
 namespace delivery_server_api.Migrations
 {
     [DbContext(typeof(FoodDBContext))]
-    [Migration("20230501121624_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230502093903_SecondCreate")]
+    partial class SecondCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace delivery_server_api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("delivery_server_api.Models.FoodItem", b =>
+            modelBuilder.Entity("delivery_server_api.Models.FoodModels.FoodDbModel", b =>
                 {
                     b.Property<Guid>("FoodId")
                         .ValueGeneratedOnAdd()
@@ -33,11 +33,13 @@ namespace delivery_server_api.Migrations
 
                     b.Property<string>("Price")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.HasKey("FoodId");
 
@@ -74,7 +76,7 @@ namespace delivery_server_api.Migrations
 
             modelBuilder.Entity("delivery_server_api.Models.Image", b =>
                 {
-                    b.HasOne("delivery_server_api.Models.FoodItem", "FoodItem")
+                    b.HasOne("delivery_server_api.Models.FoodModels.FoodDbModel", "FoodItem")
                         .WithOne("Image")
                         .HasForeignKey("delivery_server_api.Models.Image", "FoodItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -83,7 +85,7 @@ namespace delivery_server_api.Migrations
                     b.Navigation("FoodItem");
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.FoodItem", b =>
+            modelBuilder.Entity("delivery_server_api.Models.FoodModels.FoodDbModel", b =>
                 {
                     b.Navigation("Image")
                         .IsRequired();

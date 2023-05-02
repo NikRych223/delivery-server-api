@@ -1,4 +1,5 @@
 ﻿using delivery_server_api.Models;
+using delivery_server_api.Models.FoodModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace delivery_server_api.Contexts
