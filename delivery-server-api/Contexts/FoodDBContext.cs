@@ -1,5 +1,6 @@
 ﻿using delivery_server_api.Models;
 using delivery_server_api.Models.ApplicationUser;
+using delivery_server_api.Models.Favorite;
 using delivery_server_api.Models.FoodModels;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace delivery_server_api.Contexts
     public class FoodDBContext : IdentityDbContext
     {
         public required DbSet<FoodDbModel> FoodItems { get; set; }
+        public DbSet<FavoriteItem> Favorite { get; set; }
 
         public FoodDBContext(DbContextOptions options) : base(options)
         {
@@ -58,13 +60,13 @@ namespace delivery_server_api.Contexts
                 .Property(x => x.Addres)
                 .IsRequired();
             modelBuilder.Entity<FoodUserDbModel>()
-                .HasMany(x => x.Favorite)
+                .HasMany(x => x.Favorites)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);
 
-            modelBuilder.Entity<FavoriteModel>()
+            modelBuilder.Entity<FavoriteItem>()
                 .HasKey(x => x.Id);
-            modelBuilder.Entity<FavoriteModel>()
+            modelBuilder.Entity<FavoriteItem>()
                 .Property(x => x.FoodId)
                 .IsRequired();
         }

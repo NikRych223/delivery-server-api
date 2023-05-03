@@ -12,8 +12,8 @@ using delivery_server_api.Contexts;
 namespace delivery_server_api.Migrations
 {
     [DbContext(typeof(FoodDBContext))]
-    [Migration("20230502103018_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230503121949_threesMigr")]
+    partial class threesMigr
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,7 +235,7 @@ namespace delivery_server_api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.FavoriteModel", b =>
+            modelBuilder.Entity("delivery_server_api.Models.FavoriteItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -252,7 +252,7 @@ namespace delivery_server_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FavoriteModel");
+                    b.ToTable("Favorite");
                 });
 
             modelBuilder.Entity("delivery_server_api.Models.FoodModels.FoodDbModel", b =>
@@ -367,10 +367,10 @@ namespace delivery_server_api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.FavoriteModel", b =>
+            modelBuilder.Entity("delivery_server_api.Models.FavoriteItem", b =>
                 {
                     b.HasOne("delivery_server_api.Models.ApplicationUser.FoodUserDbModel", "User")
-                        .WithMany("Favorite")
+                        .WithMany("Favorites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -397,7 +397,7 @@ namespace delivery_server_api.Migrations
 
             modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.FoodUserDbModel", b =>
                 {
-                    b.Navigation("Favorite");
+                    b.Navigation("Favorites");
                 });
 #pragma warning restore 612, 618
         }

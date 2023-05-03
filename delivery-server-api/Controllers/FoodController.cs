@@ -1,6 +1,7 @@
 ﻿using delivery_server_api.Contexts;
 using delivery_server_api.Models;
 using delivery_server_api.Models.FoodModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -64,6 +65,7 @@ namespace delivery_server_api.Controllers
 
         [Route("getItem")]
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllItems()
         {
             try

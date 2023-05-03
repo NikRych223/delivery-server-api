@@ -172,7 +172,7 @@ namespace delivery_server_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FavoriteModel",
+                name: "FavoriteItem",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -181,9 +181,9 @@ namespace delivery_server_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FavoriteModel", x => x.Id);
+                    table.PrimaryKey("PK_FavoriteItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FavoriteModel_AspNetUsers_UserId",
+                        name: "FK_FavoriteItem_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -250,8 +250,8 @@ namespace delivery_server_api.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FavoriteModel_UserId",
-                table: "FavoriteModel",
+                name: "IX_FavoriteItem_UserId",
+                table: "FavoriteItem",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -286,7 +286,7 @@ namespace delivery_server_api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FavoriteModel");
+                name: "FavoriteItem");
 
             migrationBuilder.DropTable(
                 name: "Image");

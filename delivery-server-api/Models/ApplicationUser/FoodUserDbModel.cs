@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using delivery_server_api.Models.Favorite;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace delivery_server_api.Models.ApplicationUser
@@ -9,6 +10,6 @@ namespace delivery_server_api.Models.ApplicationUser
         [StringLength(100)]
         public string Addres { get; set; }
 
-        public List<FavoriteModel>? Favorite { get; set; }
+        public List<FavoriteItem> Favorites { get; } = new List<FavoriteItem>();
     }
 }
