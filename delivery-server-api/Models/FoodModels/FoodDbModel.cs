@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using delivery_server_api.Models.Favorite;
+using System.ComponentModel.DataAnnotations;
 
 namespace delivery_server_api.Models.FoodModels
 {
@@ -16,5 +17,6 @@ namespace delivery_server_api.Models.FoodModels
 
         [Required]
         public virtual Image Image { get; set; }
+        public virtual List<FavoriteItem> Favorites { get; } = new();
     }
 }

@@ -33,12 +33,16 @@ namespace delivery_server_api.Controllers
 
                     if (user == null) return NotFound("User not valid");
 
+                    // TODO - rename result!!!
                     var result = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == model.FoodId && x.UserId == user.Id);
 
                     if (result != null) return BadRequest("Favorites find equels foodId");
 
-                    var favoriteItem = new FavoriteItem { FoodId = model.FoodId };
-                    user.Favorites.Add(favoriteItem);
+                    var food = await _dbContext.FoodItems.FindAsync(model.FoodId);
+
+                    if (food == null) return NotFound("Food item not found");
+
+                    food.Favorites.Add(new FavoriteItem { UserId = user.Id });
                     await _dbContext.SaveChangesAsync();
 
                     return Ok("Favorite added");

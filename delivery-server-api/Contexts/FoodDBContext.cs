@@ -39,6 +39,10 @@ namespace delivery_server_api.Contexts
                 .WithOne(f => f.FoodItem)
                 .HasForeignKey<Image>(i => i.FoodId)
                 .IsRequired();
+            modelBuilder.Entity<FoodDbModel>()
+                .HasMany(x => x.Favorites)
+                .WithOne(x => x.Food)
+                .HasForeignKey(x => x.FoodId);
             modelBuilder.Entity<Image>()
                 .HasKey(i => i.ImageId);
 

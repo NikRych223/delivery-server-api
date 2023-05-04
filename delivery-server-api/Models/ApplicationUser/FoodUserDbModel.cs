@@ -10,6 +10,6 @@ namespace delivery_server_api.Models.ApplicationUser
         [StringLength(100)]
         public string Addres { get; set; }
 
-        public List<FavoriteItem> Favorites { get; } = new List<FavoriteItem>();
+        public virtual List<FavoriteItem> Favorites { get; } = new List<FavoriteItem>();
     }
 }
