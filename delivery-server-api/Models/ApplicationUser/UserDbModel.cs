@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace delivery_server_api.Models.ApplicationUser
 {
-    public class FoodUserDbModel : IdentityUser
+    public class UserDbModel : IdentityUser
     {
         [Required]
         [StringLength(100)]
         public string Addres { get; set; }
 
-        public List<FavoriteItem> Favorites { get; } = new List<FavoriteItem>();
+        public virtual List<FavoriteDbModel> Favorites { get; } = new List<FavoriteDbModel>();
     }
 }

@@ -2,14 +2,14 @@
 
 namespace delivery_server_api.Models.ApplicationUser
 {
-    public class FoodUserFormModel
+    public class UserSignUpModel
     {
         [Required]
         [StringLength(100)]
         public string UserName { get; set; }
 
         [Required]
-        [StringLength(20)]
+        [StringLength(50)]
         public string Password { get; set; }
 
         [Required]
