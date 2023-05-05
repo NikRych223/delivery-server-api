@@ -13,9 +13,9 @@ namespace delivery_server_api.Models
         [Required]
         public string LocalPath { get; set; }
 
-        public Guid FoodItemId { get; set; }
+        public Guid FoodId { get; set; }
 
         [Required]
-        public FoodDbModel FoodItem { get; set; }
+        public virtual FoodDbModel FoodItem { get; set; }
     }
 }
