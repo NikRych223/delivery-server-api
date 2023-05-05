@@ -12,18 +12,18 @@ namespace delivery_server_api.Controllers
     [ApiController]
     public class FavoriteController : ControllerBase
     {
-        private readonly UserManager<UserDbModel> _userManager;
+        private readonly UserManager<FoodUserDbModel> _userManager;
         private readonly FoodDBContext _dbContext;
 
-        public FavoriteController(UserManager<UserDbModel> userManager, FoodDBContext dbContext)
+        public FavoriteController(UserManager<FoodUserDbModel> userManager, FoodDBContext dbContext)
         {
             _userManager = userManager;
             _dbContext = dbContext;
         }
 
-        [Route("item")]
+        [Route("addFavorite")]
         [HttpPost]
-        public async Task<IActionResult> PostAddFavoriteByUserName([FromBody] FavoriteAddModel model)
+        public async Task<IActionResult> PostAddFavoriteByUserName([FromForm] FavoriteFormModel model)
         {
             try
             {
@@ -33,16 +33,12 @@ namespace delivery_server_api.Controllers
 
                     if (user == null) return NotFound("User not valid");
 
-                    // TODO - rename result!!! - renemed foodIdAndUserName
-                    var foodIdAndUserName = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == model.FoodId && x.UserId == user.Id);
+                    var result = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == model.FoodId && x.UserId == user.Id);
 
-                    if (foodIdAndUserName != null) return BadRequest("Favorites find equels foodId");
+                    if (result != null) return BadRequest("Favorites find equels foodId");
 
-                    // var foodItem = await _dbContext.FoodItems.FindAsync(model.FoodId);
-                    // if (foodItem == null) return NotFound("Food item not found");
-                    // food.Favorites.Add(new FavoriteItem { UserId = user.Id });
-
-                    await _dbContext.Favorite.AddAsync(new FavoriteDbModel { FoodId = model.FoodId, UserId = user.Id });
+                    var favoriteItem = new FavoriteItem { FoodId = model.FoodId };
+                    user.Favorites.Add(favoriteItem);
                     await _dbContext.SaveChangesAsync();
 
                     return Ok("Favorite added");
@@ -56,25 +52,32 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("item")]
+        [Route("getAll")]
         [HttpGet]
-        public async Task<IActionResult> GetAllFavoriteByUserName([FromQuery] string userName)
+        public async Task<IActionResult> GetAllFavoriteByUserName([FromForm] string userName)
         {
             try
             {
                 var user = await _userManager.FindByNameAsync(userName);
 
-                if (user == null) return NotFound("User not found");
+                if (user == null) return NotFound("User not valid");
 
-                var favoriteItems = await _dbContext.FoodItems
-                    .Where(fd => 
-                        _dbContext.Favorite
-                            .Where(x => x.UserId == user.Id)
-                            .Select(x => x.FoodId)
-                            .Contains(fd.FoodId)
-                    ).Select(x => new FavoriteViewModel { FoodId = x.FoodId, Title = x.Title, Price = x.Price }).ToListAsync();
+                var favoriteItems = _dbContext.Favorite.Where(x => x.UserId == user.Id).Select(x => x.FoodId).ToList();
 
-                return Ok(favoriteItems);
+                List<FoodDbModel> itemList = new();
+
+                foreach (var item in favoriteItems)
+                {
+                    var newItem = await _dbContext.FoodItems.SingleOrDefaultAsync(x => x.FoodId == item);
+
+                    if (newItem == null) continue;
+
+                    itemList.Add(newItem);
+                }
+
+                if (user == null) return NotFound("Foods not found");
+
+                return Ok(itemList);
 
             }
             catch (Exception ex)
@@ -83,17 +86,17 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("item")]
+        [Route("removeOne")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteOneByUserName([FromBody] FavoriteAddModel model)
+        public async Task<IActionResult> DeleteOneByUserName([FromForm] string userName, [FromForm] Guid foodId)
         {
             try
             {
-                var user = await _userManager.FindByNameAsync(model.UserName);
+                var user = await _userManager.FindByNameAsync(userName);
 
-                if (user == null) return NotFound("User not found");
+                if (user == null) return NotFound("User not valid");
 
-                var favoriteItem = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == model.FoodId);
+                var favoriteItem = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == foodId);
 
                 if (favoriteItem == null) return NotFound("Favorite item not found");
 

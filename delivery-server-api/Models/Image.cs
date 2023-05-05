@@ -16,6 +16,6 @@ namespace delivery_server_api.Models
         public Guid FoodId { get; set; }
 
         [Required]
-        public virtual FoodDbModel FoodItem { get; set; }
+        public FoodDbModel FoodItem { get; set; }
     }
 }

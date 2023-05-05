@@ -10,31 +10,31 @@ namespace delivery_server_api.Controllers
     public class UserController : ControllerBase
     {
         private readonly FoodDBContext _dbContext;
-        private readonly UserManager<UserDbModel> _userManager;
-        private readonly SignInManager<UserDbModel> _signInManager;
+        private readonly UserManager<FoodUserDbModel> _userManager;
+        private readonly SignInManager<FoodUserDbModel> _signInManager;
 
-        public UserController(FoodDBContext dbContext, UserManager<UserDbModel> userManager, SignInManager<UserDbModel> signInManager)
+        public UserController(FoodDBContext dbContext, UserManager<FoodUserDbModel> userManager, SignInManager<FoodUserDbModel> signInManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
         }
 
-        [Route("signup")]
+        [Route("createUser")]
         [HttpPost]
-        public async Task<IActionResult> PostCreateUser([FromBody] UserSignUpModel model)
+        public async Task<IActionResult> PostCreateUser([FromForm] FoodUserFormModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var user = new UserDbModel { UserName = model.UserName, Email = model.EmailAddress, PhoneNumber = model.PhoneNumber, Addres = model.Addres };
+                    var user = new FoodUserDbModel { UserName = model.UserName, Email = model.EmailAddress, PhoneNumber = model.PhoneNumber, Addres = model.Addres };
                     var result = await _userManager.CreateAsync(user, model.Password);
 
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return Ok("User sign up");
+                        return Ok("User created");
                     }
                 }
 
@@ -46,21 +46,21 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("signin")]
+        [Route("loginUser")]
         [HttpPost]
-        public async Task<IActionResult> PostLoginUser([FromBody] UserLoginModel model)
+        public async Task<IActionResult> PostLoginUser([FromForm] string userName, [FromForm] string password)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var user = await _userManager.FindByNameAsync(model.UserName);
+                    var user = await _userManager.FindByNameAsync(userName);
 
                     if (user == null) return BadRequest("User not foud");
 
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+                    var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
-                    if (result.Succeeded) return Ok("User sign in");
+                    if (result.Succeeded) return Ok("User logged");
 
                     return BadRequest("Username or Password not valid");
                 }
@@ -73,7 +73,7 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("signout")]
+        [Route("signOut")]
         [HttpPost]
         public async Task<IActionResult> PostSignOut()
         {

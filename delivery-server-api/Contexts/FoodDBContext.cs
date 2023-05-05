@@ -10,7 +10,7 @@ namespace delivery_server_api.Contexts
     public class FoodDBContext : IdentityDbContext
     {
         public required DbSet<FoodDbModel> FoodItems { get; set; }
-        public DbSet<FavoriteDbModel> Favorite { get; set; }
+        public DbSet<FavoriteItem> Favorite { get; set; }
 
         public FoodDBContext(DbContextOptions options) : base(options)
         {
@@ -39,38 +39,34 @@ namespace delivery_server_api.Contexts
                 .WithOne(f => f.FoodItem)
                 .HasForeignKey<Image>(i => i.FoodId)
                 .IsRequired();
-            modelBuilder.Entity<FoodDbModel>()
-                .HasMany(x => x.Favorites)
-                .WithOne(x => x.Food)
-                .HasForeignKey(x => x.FoodId);
             modelBuilder.Entity<Image>()
                 .HasKey(i => i.ImageId);
 
             // USER DB CONTEXT CONFIG
 
-            modelBuilder.Entity<UserDbModel>()
+            modelBuilder.Entity<FoodUserDbModel>()
                 .Property(x => x.UserName)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
+            modelBuilder.Entity<FoodUserDbModel>()
                 .Property(x => x.PasswordHash)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
+            modelBuilder.Entity<FoodUserDbModel>()
                 .Property(x => x.Email)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
+            modelBuilder.Entity<FoodUserDbModel>()
                 .Property (x => x.PhoneNumber)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
+            modelBuilder.Entity<FoodUserDbModel>()
                 .Property(x => x.Addres)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
+            modelBuilder.Entity<FoodUserDbModel>()
                 .HasMany(x => x.Favorites)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);
 
-            modelBuilder.Entity<FavoriteDbModel>()
+            modelBuilder.Entity<FavoriteItem>()
                 .HasKey(x => x.Id);
-            modelBuilder.Entity<FavoriteDbModel>()
+            modelBuilder.Entity<FavoriteItem>()
                 .Property(x => x.FoodId)
                 .IsRequired();
         }

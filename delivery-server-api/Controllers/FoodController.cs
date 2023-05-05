@@ -1,6 +1,7 @@
 ﻿using delivery_server_api.Contexts;
 using delivery_server_api.Models;
 using delivery_server_api.Models.FoodModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,9 +20,9 @@ namespace delivery_server_api.Controllers
 
         #region CREATE
 
-        [Route("item")]
+        [Route("addItem")]
         [HttpPost]
-        public async Task<IActionResult> PostNewItem([FromForm] FoodAddModel model)
+        public async Task<IActionResult> PostNewItem([FromForm] FoodFormModel model)
         {
             try
             {
@@ -62,21 +63,20 @@ namespace delivery_server_api.Controllers
 
         #region READ
 
-        [Route("item")]
+        [Route("getItem")]
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllItems()
         {
             try
             {
-                var items = await _dbContext.FoodItems.ToListAsync();
-
-                if (items == null) return NotFound("Food item not found");
-
+                var items = await _dbContext.FoodItems.Include(x => x.Image).ToListAsync();
                 var itemList = new List<FoodViewModel>();
 
                 foreach (var item in items)
                 {
-                    itemList.Add(new FoodViewModel(item.FoodId, item.Title, item.Price));
+                    var itemResult = new FoodViewModel { Id = item.FoodId, Title = item.Title, Price = item.Price };
+                    itemList.Add(itemResult);
                 }
 
                 return Ok(itemList);
@@ -87,7 +87,7 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("item/{id}")]
+        [Route("getItem/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetItemById(Guid id)
         {
@@ -95,9 +95,10 @@ namespace delivery_server_api.Controllers
             {
                 var item = await _dbContext.FoodItems.FindAsync(id);
 
-                if (item == null) return NotFound("Food item not found");
+                if (item == null) return NotFound();
 
-                return Ok(new FoodViewModel(item.FoodId, item.Title, item.Price));
+                var itemResult = new FoodViewModel { Id = item.FoodId, Title = item.Title, Price = item.Price };
+                return Ok(itemResult);
             }
             catch (Exception ex)
             {
@@ -105,9 +106,9 @@ namespace delivery_server_api.Controllers
             }
         }
 
-        [Route("item/image/{id}")]
+        [Route("getImage/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetImageByFoodId(Guid id)
+        public async Task<IActionResult> GetImageById(Guid id)
         {
             try
             {
@@ -116,7 +117,6 @@ namespace delivery_server_api.Controllers
                 if (item == null) return NotFound();
 
                 var image = File(await System.IO.File.ReadAllBytesAsync(item.Image.LocalPath), "image/jpeg");
-
                 return image;
             }
             catch (Exception ex)
@@ -127,7 +127,7 @@ namespace delivery_server_api.Controllers
 
         #endregion
 
-        [Route("item/{id}")]
+        [Route("deleteItem/{id}")]
         [HttpDelete]
         public async Task<IActionResult> DeleteItemById(Guid id)
         {
@@ -139,8 +139,6 @@ namespace delivery_server_api.Controllers
 
                 System.IO.File.Delete(item.Image.LocalPath);
                 _dbContext.FoodItems.Remove(item);
-
-                // TODO - remove from Favorite DB - Added by inherite FoodDbModel
 
                 await _dbContext.SaveChangesAsync();
 
