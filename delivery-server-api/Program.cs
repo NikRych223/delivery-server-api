@@ -26,7 +26,7 @@ namespace delivery_server_api
             builder.Services.AddDbContext<FoodDBContext>(options
                 => options.UseSqlServer(connectionString));
 
-            builder.Services.AddIdentity<FoodUserDbModel, IdentityRole>(options =>
+            builder.Services.AddIdentity<UserDbModel, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;

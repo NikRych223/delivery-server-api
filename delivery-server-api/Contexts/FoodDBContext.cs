@@ -10,7 +10,7 @@ namespace delivery_server_api.Contexts
     public class FoodDBContext : IdentityDbContext
     {
         public required DbSet<FoodDbModel> FoodItems { get; set; }
-        public DbSet<FavoriteItem> Favorite { get; set; }
+        public DbSet<FavoriteDbModel> Favorite { get; set; }
 
         public FoodDBContext(DbContextOptions options) : base(options)
         {
@@ -48,29 +48,29 @@ namespace delivery_server_api.Contexts
 
             // USER DB CONTEXT CONFIG
 
-            modelBuilder.Entity<FoodUserDbModel>()
+            modelBuilder.Entity<UserDbModel>()
                 .Property(x => x.UserName)
                 .IsRequired();
-            modelBuilder.Entity<FoodUserDbModel>()
+            modelBuilder.Entity<UserDbModel>()
                 .Property(x => x.PasswordHash)
                 .IsRequired();
-            modelBuilder.Entity<FoodUserDbModel>()
+            modelBuilder.Entity<UserDbModel>()
                 .Property(x => x.Email)
                 .IsRequired();
-            modelBuilder.Entity<FoodUserDbModel>()
+            modelBuilder.Entity<UserDbModel>()
                 .Property (x => x.PhoneNumber)
                 .IsRequired();
-            modelBuilder.Entity<FoodUserDbModel>()
+            modelBuilder.Entity<UserDbModel>()
                 .Property(x => x.Addres)
                 .IsRequired();
-            modelBuilder.Entity<FoodUserDbModel>()
+            modelBuilder.Entity<UserDbModel>()
                 .HasMany(x => x.Favorites)
                 .WithOne(x => x.User)
                 .HasForeignKey(x => x.UserId);
 
-            modelBuilder.Entity<FavoriteItem>()
+            modelBuilder.Entity<FavoriteDbModel>()
                 .HasKey(x => x.Id);
-            modelBuilder.Entity<FavoriteItem>()
+            modelBuilder.Entity<FavoriteDbModel>()
                 .Property(x => x.FoodId)
                 .IsRequired();
         }

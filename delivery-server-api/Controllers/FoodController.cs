@@ -70,7 +70,7 @@ namespace delivery_server_api.Controllers
             {
                 var items = await _dbContext.FoodItems.ToListAsync();
 
-                if (items == null) return NotFound();
+                if (items == null) return NotFound("Food item not found");
 
                 var itemList = new List<FoodViewModel>();
 
@@ -95,7 +95,7 @@ namespace delivery_server_api.Controllers
             {
                 var item = await _dbContext.FoodItems.FindAsync(id);
 
-                if (item == null) return NotFound();
+                if (item == null) return NotFound("Food item not found");
 
                 return Ok(new FoodViewModel(item.FoodId, item.Title, item.Price));
             }

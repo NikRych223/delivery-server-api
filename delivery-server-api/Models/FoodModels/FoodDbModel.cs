@@ -17,6 +17,6 @@ namespace delivery_server_api.Models.FoodModels
 
         [Required]
         public virtual Image Image { get; set; }
-        public virtual List<FavoriteItem> Favorites { get; } = new();
+        public virtual List<FavoriteDbModel> Favorites { get; } = new();
     }
 }

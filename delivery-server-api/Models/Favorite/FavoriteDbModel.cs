@@ -4,16 +4,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace delivery_server_api.Models.Favorite
 {
-    public class FavoriteItem
+    public class FavoriteDbModel
     {
         public Guid Id { get; set; }
 
         [Required]
         public string UserId { get; set; }
-        [Required]
-        public virtual FoodUserDbModel User { get; set; }
 
+        [Required]
+        public virtual UserDbModel User { get; set; }
+
+        [Required]
         public Guid FoodId { get; set; }
+        [Required]
         public virtual FoodDbModel Food { get; set; }
     }
 }

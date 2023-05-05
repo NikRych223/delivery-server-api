@@ -232,7 +232,7 @@ namespace delivery_server_api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.Favorite.FavoriteItem", b =>
+            modelBuilder.Entity("delivery_server_api.Models.Favorite.FavoriteDbModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -303,7 +303,7 @@ namespace delivery_server_api.Migrations
                     b.ToTable("Image");
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.FoodUserDbModel", b =>
+            modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.UserDbModel", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
@@ -312,7 +312,7 @@ namespace delivery_server_api.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasDiscriminator().HasValue("FoodUserDbModel");
+                    b.HasDiscriminator().HasValue("UserDbModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -366,7 +366,7 @@ namespace delivery_server_api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.Favorite.FavoriteItem", b =>
+            modelBuilder.Entity("delivery_server_api.Models.Favorite.FavoriteDbModel", b =>
                 {
                     b.HasOne("delivery_server_api.Models.FoodModels.FoodDbModel", "Food")
                         .WithMany("Favorites")
@@ -374,7 +374,7 @@ namespace delivery_server_api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("delivery_server_api.Models.ApplicationUser.FoodUserDbModel", "User")
+                    b.HasOne("delivery_server_api.Models.ApplicationUser.UserDbModel", "User")
                         .WithMany("Favorites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -404,7 +404,7 @@ namespace delivery_server_api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.FoodUserDbModel", b =>
+            modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.UserDbModel", b =>
                 {
                     b.Navigation("Favorites");
                 });
