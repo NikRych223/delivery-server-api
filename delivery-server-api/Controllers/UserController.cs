@@ -121,6 +121,8 @@ namespace delivery_server_api.Controllers
             {
                 var externalInfo = await _signInManager.GetExternalLoginInfoAsync();
 
+                if (externalInfo == null) return BadRequest();
+
                 var externalSignIn = await _signInManager.ExternalLoginSignInAsync(externalInfo.LoginProvider, externalInfo.ProviderKey, false, true);
 
                 if (externalSignIn.Succeeded)
