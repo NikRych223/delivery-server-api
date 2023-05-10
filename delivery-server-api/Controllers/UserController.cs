@@ -2,6 +2,7 @@
 using delivery_server_api.Models.ApplicationUser;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace delivery_server_api.Controllers
 {
@@ -28,7 +29,14 @@ namespace delivery_server_api.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var user = new UserDbModel { UserName = model.UserName, Email = model.EmailAddress, PhoneNumber = model.PhoneNumber, Addres = model.Addres };
+                    var user = new UserDbModel
+                    {
+                        UserName = model.UserName,
+                        Email = model.EmailAddress,
+                        PhoneNumber = model.PhoneNumber,
+                        Addres = model.Addres
+                    };
+
                     var result = await _userManager.CreateAsync(user, model.Password);
 
                     if (result.Succeeded)
@@ -81,6 +89,59 @@ namespace delivery_server_api.Controllers
             {
                 await _signInManager.SignOutAsync();
                 return Ok("User sign out");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("External")]
+        [HttpGet]
+        // TODO - change to POST, add provider, returnUrl
+        public IActionResult PostExternalSignIn(string? provider = "Google", string? returnUrl = $@"https://localhost:7050/api/User/ExternalCallback")
+        {
+            try
+            {
+                var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, returnUrl);
+
+                return Challenge(properties, provider);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("ExternalCallback")]
+        [HttpGet]
+        public async Task<IActionResult> GetExternalSignInCallback()
+        {
+            try
+            {
+                var externalInfo = await _signInManager.GetExternalLoginInfoAsync();
+
+                var externalSignIn = await _signInManager.ExternalLoginSignInAsync(externalInfo.LoginProvider, externalInfo.ProviderKey, false, true);
+
+                if (externalSignIn.Succeeded)
+                {
+                    return Ok("Sign in by External Account");
+                }
+
+                var user = new UserDbModel
+                {
+                    UserName = externalInfo.Principal.FindFirstValue(ClaimTypes.Email),
+                    Email = externalInfo.Principal.FindFirstValue(ClaimTypes.Email)
+                };
+
+                var result = await _userManager.CreateAsync(user);
+
+                if (!result.Succeeded) return BadRequest("User create error");
+
+                await _userManager.AddLoginAsync(user, externalInfo);
+                await _signInManager.SignInAsync(user, false);
+
+                return Ok("Sign in by External Account and create new account");
             }
             catch (Exception ex)
             {

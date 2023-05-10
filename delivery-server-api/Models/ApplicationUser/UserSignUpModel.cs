@@ -16,12 +16,10 @@ namespace delivery_server_api.Models.ApplicationUser
         [EmailAddress]
         public string EmailAddress { get; set; }
 
-        [Required]
         [Phone]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
-        [Required]
         [StringLength(100)]
-        public string Addres { get; set; }
+        public string? Addres { get; set; }
     }
 }

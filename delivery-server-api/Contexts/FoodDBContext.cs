@@ -51,18 +51,18 @@ namespace delivery_server_api.Contexts
             modelBuilder.Entity<UserDbModel>()
                 .Property(x => x.UserName)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
-                .Property(x => x.PasswordHash)
-                .IsRequired();
+            //modelBuilder.Entity<UserDbModel>()
+            //    .Property(x => x.PasswordHash)
+            //    .IsRequired();
             modelBuilder.Entity<UserDbModel>()
                 .Property(x => x.Email)
                 .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
-                .Property (x => x.PhoneNumber)
-                .IsRequired();
-            modelBuilder.Entity<UserDbModel>()
-                .Property(x => x.Addres)
-                .IsRequired();
+            //modelBuilder.Entity<UserDbModel>()
+            //    .Property (x => x.PhoneNumber)
+            //    .IsRequired();
+            //modelBuilder.Entity<UserDbModel>()
+            //    .Property(x => x.Addres)
+            //    .IsRequired();
             modelBuilder.Entity<UserDbModel>()
                 .HasMany(x => x.Favorites)
                 .WithOne(x => x.User)

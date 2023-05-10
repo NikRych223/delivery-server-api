@@ -12,7 +12,7 @@ using delivery_server_api.Contexts;
 namespace delivery_server_api.Migrations
 {
     [DbContext(typeof(FoodDBContext))]
-    [Migration("20230505094501_InitialCreate")]
+    [Migration("20230510151558_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -116,11 +116,9 @@ namespace delivery_server_api.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")

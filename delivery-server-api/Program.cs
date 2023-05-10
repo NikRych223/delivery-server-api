@@ -11,6 +11,7 @@ namespace delivery_server_api
         {
             var builder = WebApplication.CreateBuilder(args);
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            var config = builder.Configuration;
 
             builder.Services.AddCors(options =>
             {
@@ -34,6 +35,14 @@ namespace delivery_server_api
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 12;
             }).AddEntityFrameworkStores<FoodDBContext>();
+
+            // TODO - Add cookie options!!!
+
+            builder.Services.AddAuthentication().AddGoogle(googleOption =>
+            {
+                googleOption.ClientId = config["Authentication:Google:ClientId"];
+                googleOption.ClientSecret = config["Authentication:Google:ClientSecret"];
+            });
 
             builder.Services.AddControllers();
 

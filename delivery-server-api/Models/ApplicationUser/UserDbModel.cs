@@ -6,7 +6,6 @@ namespace delivery_server_api.Models.ApplicationUser
 {
     public class UserDbModel : IdentityUser
     {
-        [Required]
         [StringLength(100)]
         public string Addres { get; set; }
 
