@@ -93,7 +93,7 @@ namespace delivery_server_api.Controllers
 
                 if (user == null) return NotFound("User not found");
 
-                var favoriteItem = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == model.FoodId);
+                var favoriteItem = await _dbContext.Favorite.SingleOrDefaultAsync(x => x.FoodId == model.FoodId && x.UserId == user.Id);
 
                 if (favoriteItem == null) return NotFound("Favorite item not found");
 

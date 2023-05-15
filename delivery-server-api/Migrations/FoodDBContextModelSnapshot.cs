@@ -230,6 +230,31 @@ namespace delivery_server_api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("delivery_server_api.Models.Cart.CartDbModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CountItem")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("FoodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FoodId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Cart");
+                });
+
             modelBuilder.Entity("delivery_server_api.Models.Favorite.FavoriteDbModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -364,6 +389,25 @@ namespace delivery_server_api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("delivery_server_api.Models.Cart.CartDbModel", b =>
+                {
+                    b.HasOne("delivery_server_api.Models.FoodModels.FoodDbModel", "Food")
+                        .WithMany("Carts")
+                        .HasForeignKey("FoodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("delivery_server_api.Models.ApplicationUser.UserDbModel", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Food");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("delivery_server_api.Models.Favorite.FavoriteDbModel", b =>
                 {
                     b.HasOne("delivery_server_api.Models.FoodModels.FoodDbModel", "Food")
@@ -396,6 +440,8 @@ namespace delivery_server_api.Migrations
 
             modelBuilder.Entity("delivery_server_api.Models.FoodModels.FoodDbModel", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("Favorites");
 
                     b.Navigation("Image")
@@ -404,6 +450,8 @@ namespace delivery_server_api.Migrations
 
             modelBuilder.Entity("delivery_server_api.Models.ApplicationUser.UserDbModel", b =>
                 {
+                    b.Navigation("Carts");
+
                     b.Navigation("Favorites");
                 });
 #pragma warning restore 612, 618
