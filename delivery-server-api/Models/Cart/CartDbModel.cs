@@ -9,6 +9,9 @@ namespace delivery_server_api.Models.Cart
         public Guid Id { get; set; }
 
         [Required]
+        public int CountItem { get; set; }
+
+        [Required]
         public string UserId { get; set; }
 
         [Required]

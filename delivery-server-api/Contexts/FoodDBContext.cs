@@ -12,6 +12,7 @@ namespace delivery_server_api.Contexts
     {
         public required DbSet<FoodDbModel> FoodItems { get; set; }
         public DbSet<FavoriteDbModel> Favorite { get; set; }
+        public DbSet<CartDbModel> Cart { get; set; }
 
         public FoodDBContext(DbContextOptions options) : base(options)
         {
